@@ -4,7 +4,7 @@ services:
   localstack:
     image: localstack/localstack:latest
     environment:
-      - SERVICES=dynamodb
+      - SERVICES=dynamodb,lambda,sqs
       - DEFAULT_REGION=ap-northeast-1
       - DATA_DIR=/tmp/localstack/data
     ports:
