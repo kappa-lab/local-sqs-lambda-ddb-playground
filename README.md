@@ -91,7 +91,7 @@ Createでは設定できない
 aws --endpoint-url=http://localhost:4566 \
 lambda create-event-source-mapping \
 --function-name myFunc \
---event-source-arn arn:aws:sqs:ap-northeast-1:000000000000:myQueue
+--event-source-arn arn:aws:sqs:ap-northeast-1:000000000000:myQueue.fifo
 ```
 
 ### Update Function
@@ -106,10 +106,13 @@ aws lambda update-function-code \
 ### Send SQS
 ```shell
 aws sqs send-message \
---queue-url "http://localhost:4566/000000000000/myQueue" \
+--queue-url "http://localhost:4566/000000000000/myQueue.fifo" \
 --message-body user2 \
+--message-group-id g1 \
+--message-attributes '{"name":{"DataType":"String", "StringValue": "Coffee"}}' \
 --endpoint-url=http://localhost:4566 
 ```
+ 
 
 Check
 ```shell

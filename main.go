@@ -21,20 +21,25 @@ func main() {
 	flag.Parse()
 
 	if *isStandAlone {
-		_ = createItem("u1")
+		_ = createItem("u1", "tea")
 		return
 	}
 	lambda.Start(handler)
 }
 
 func handler(ctx context.Context, evt events.SQSEvent) {
-	err := createItem(evt.Records[0].Body)
+	name := ""
+	if nameAttr, has := evt.Records[0].MessageAttributes["name"]; has {
+		name = *nameAttr.StringValue
+	}
+	err := createItem(evt.Records[0].Body, name)
+
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func createItem(userId string) error {
+func createItem(userId string, userName string) error {
 	ctx := context.Background()
 	conf, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
@@ -62,7 +67,8 @@ func createItem(userId string) error {
 		&dynamodb.PutItemInput{
 			TableName: aws.String(tableName),
 			Item: map[string]types.AttributeValue{
-				"user_id": &types.AttributeValueMemberS{Value: userId},
+				"user_id":   &types.AttributeValueMemberS{Value: userId},
+				"user_name": &types.AttributeValueMemberS{Value: userName},
 			},
 		},
 		dynamodb.WithEndpointResolver(dynamodb.EndpointResolverFromURL("http://localhost:4566")),
