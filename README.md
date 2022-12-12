@@ -16,7 +16,6 @@ Check
 ```shell
 aws dynamodb list-tables  --endpoint-url http://localhost:4566
 ```
-
 ```json
 {
     "TableNames": [
@@ -42,4 +41,10 @@ aws sqs list-queues --endpoint-url http://localhost:4566
         "http://localhost:4566/000000000000/myQueue"
     ]
 }
+```
+
+## 3rd Create Golang Program
+
+```shell
+aws dynamodb scan --table-name=users  --endpoint-url http://localhost:4566
 ```
