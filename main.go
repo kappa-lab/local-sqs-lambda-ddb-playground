@@ -41,6 +41,9 @@ func handler(ctx context.Context, evt events.SQSEvent) {
 
 func createItem(userId string, userName string) error {
 	log.Printf("[userId:%s , userName:%s]", userId, userName)
+	if userName == "" {
+		return fmt.Errorf("Name must not empty")
+	}
 	ctx := context.Background()
 	conf, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
