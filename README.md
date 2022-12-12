@@ -28,7 +28,7 @@ aws dynamodb list-tables  --endpoint-url http://localhost:4566
 ## Create Queue
 ```shell
 aws sqs create-queue \
---queue-name myQueue \
+--cli-input-json file://myQueue.fifo.json \
 --endpoint-url http://localhost:4566
 ```
 Check
@@ -38,7 +38,7 @@ aws sqs list-queues --endpoint-url http://localhost:4566
 ```json
 {
     "QueueUrls": [
-        "http://localhost:4566/000000000000/myQueue"
+        "http://localhost:4566/000000000000/myQueue.fifo"
     ]
 }
 ```
