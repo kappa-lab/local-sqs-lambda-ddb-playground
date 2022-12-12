@@ -3,6 +3,7 @@ module github.com/kappa-lab/localstack-playground
 go 1.19
 
 require (
+	github.com/aws/aws-lambda-go v1.36.0
 	github.com/aws/aws-sdk-go-v2 v1.17.2
 	github.com/aws/aws-sdk-go-v2/config v1.18.4
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.17.8

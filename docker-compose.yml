@@ -9,4 +9,3 @@ services:
       - DATA_DIR=/tmp/localstack/data
     ports:
       - 4566:4566
-      - 8000:8080 # dashboard

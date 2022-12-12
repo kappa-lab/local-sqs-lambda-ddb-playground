@@ -2,8 +2,11 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
@@ -13,13 +16,21 @@ import (
 const tableName = "users"
 
 func main() {
-	createItem("u1")
+	lambda.Start(handler)
 }
-func createItem(userId string) {
+
+func handler(ctx context.Context, evt events.SQSEvent) {
+	err := createItem(evt.Records[0].Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func createItem(userId string) error {
 	ctx := context.Background()
 	conf, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	ddbClient := dynamodb.NewFromConfig(conf)
@@ -32,11 +43,11 @@ func createItem(userId string) {
 	)
 
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	if len(out.TableNames) == 0 && out.TableNames[0] != tableName {
-		log.Fatal("table not found:", out.TableNames)
+		return fmt.Errorf("table not found:%s", out.TableNames)
 	}
 
 	_, err = ddbClient.PutItem(ctx,
@@ -49,6 +60,7 @@ func createItem(userId string) {
 		dynamodb.WithEndpointResolver(dynamodb.EndpointResolverFromURL("http://localhost:4566")),
 	)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+	return nil
 }
