@@ -59,6 +59,9 @@ aws dynamodb scan --table-name=users  --endpoint-url http://localhost:4566
         {
             "user_id": {
                 "S": "u1"
+            },
+            "user_name": {
+                "S": "tea"
             }
         }
     ],
@@ -123,12 +126,18 @@ aws dynamodb scan --table-name=users  --endpoint-url http://localhost:4566
     "Items": [
         {
             "user_id": {
-                "S": "user2" // messageBodyで指定したuserIdが追加されている
+                "S": "user2"
+            },
+            "user_name": {
+                "S": "Coffee"
             }
         },
         {
             "user_id": {
                 "S": "u1"
+            },
+            "user_name": {
+                "S": "tea"
             }
         }
     ],
@@ -141,7 +150,7 @@ aws dynamodb scan --table-name=users  --endpoint-url http://localhost:4566
 Check
 ```shell
 aws sqs get-queue-attributes \
---queue-url "http://localhost:4566/000000000000/myQueue" \
+--queue-url "http://localhost:4566/000000000000/myQueue.fifo" \
 --attribute-names ApproximateNumberOfMessages \
 --query Attributes.ApproximateNumberOfMessages \
 --endpoint-url http://localhost:4566
