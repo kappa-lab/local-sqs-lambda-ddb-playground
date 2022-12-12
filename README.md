@@ -46,7 +46,7 @@ aws sqs list-queues --endpoint-url http://localhost:4566
 ## 3rd Create Golang Program
 
 ```shell
-go run . 
+go run . -isStandAlone=true 
 ```
 
 Check

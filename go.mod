@@ -1,4 +1,4 @@
-module github.com/kappa-lab/localstack-playground
+module github.com/kappa-lab/local-sqs-lambda-ddb-playground
 
 go 1.19
 

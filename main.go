@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log"
 
@@ -16,6 +17,13 @@ import (
 const tableName = "users"
 
 func main() {
+	isStandAlone := flag.Bool("isStandAlone", false, "default is false")
+	flag.Parse()
+
+	if *isStandAlone {
+		_ = createItem("u1")
+		return
+	}
 	lambda.Start(handler)
 }
 
