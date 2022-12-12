@@ -46,5 +46,24 @@ aws sqs list-queues --endpoint-url http://localhost:4566
 ## 3rd Create Golang Program
 
 ```shell
+go run . 
+```
+
+Check
+```shell
 aws dynamodb scan --table-name=users  --endpoint-url http://localhost:4566
+```
+```json
+{
+    "Items": [
+        {
+            "user_id": {
+                "S": "u1"
+            }
+        }
+    ],
+    "Count": 1,
+    "ScannedCount": 1,
+    "ConsumedCapacity": null
+}
 ```
