@@ -105,6 +105,10 @@ aws lambda update-function-code \
 --function-name myFunc \
 --endpoint-url=http://localhost:4566 
 ```
+### Show Log
+```sh
+aws --endpoint-url=http://localhost:4566 logs tail /aws/lambda/myFunc --follow
+```
 
 ### Send SQS
 ```shell
