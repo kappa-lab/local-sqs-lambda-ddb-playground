@@ -27,7 +27,9 @@ func main() {
 	lambda.Start(handler)
 }
 
-func handler(ctx context.Context, evt events.SQSEvent) {
+func handler(ctx context.Context, evt events.SQSEvent) error {
+	log.Printf("Start Handler[ReceiptHandle:%s]", evt.Records[0].ReceiptHandle)
+
 	name := ""
 	if nameAttr, has := evt.Records[0].MessageAttributes["name"]; has {
 		name = *nameAttr.StringValue
@@ -35,8 +37,11 @@ func handler(ctx context.Context, evt events.SQSEvent) {
 	err := createItem(evt.Records[0].Body, name)
 
 	if err != nil {
-		log.Fatal(err)
+		err = fmt.Errorf("Error:%+v,ReceiptHandle:%s, ", err, evt.Records[0].ReceiptHandle)
+		log.Print(err)
+		return err
 	}
+	return nil
 }
 
 func createItem(userId string, userName string) error {
