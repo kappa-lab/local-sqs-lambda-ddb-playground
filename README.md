@@ -28,7 +28,7 @@ aws dynamodb list-tables  --endpoint-url http://localhost:4566
 ## Create Queue
 ```shell
 aws sqs create-queue \
---queue-name myQueue \
+--cli-input-json file://myQueue.fifo.json \
 --endpoint-url http://localhost:4566
 ```
 Check
@@ -38,7 +38,7 @@ aws sqs list-queues --endpoint-url http://localhost:4566
 ```json
 {
     "QueueUrls": [
-        "http://localhost:4566/000000000000/myQueue"
+        "http://localhost:4566/000000000000/myQueue.fifo"
     ]
 }
 ```
@@ -59,6 +59,9 @@ aws dynamodb scan --table-name=users  --endpoint-url http://localhost:4566
         {
             "user_id": {
                 "S": "u1"
+            },
+            "user_name": {
+                "S": "tea"
             }
         }
     ],
@@ -91,7 +94,7 @@ Createでは設定できない
 aws --endpoint-url=http://localhost:4566 \
 lambda create-event-source-mapping \
 --function-name myFunc \
---event-source-arn arn:aws:sqs:ap-northeast-1:000000000000:myQueue
+--event-source-arn arn:aws:sqs:ap-northeast-1:000000000000:myQueue.fifo
 ```
 
 ### Update Function
@@ -102,14 +105,21 @@ aws lambda update-function-code \
 --function-name myFunc \
 --endpoint-url=http://localhost:4566 
 ```
+### Show Log
+```sh
+aws --endpoint-url=http://localhost:4566 logs tail /aws/lambda/myFunc --follow
+```
 
 ### Send SQS
 ```shell
 aws sqs send-message \
---queue-url "http://localhost:4566/000000000000/myQueue" \
+--queue-url "http://localhost:4566/000000000000/myQueue.fifo" \
 --message-body user2 \
+--message-group-id g1 \
+--message-attributes '{"name":{"DataType":"String", "StringValue": "Coffee"}}' \
 --endpoint-url=http://localhost:4566 
 ```
+ 
 
 Check
 ```shell
@@ -120,12 +130,18 @@ aws dynamodb scan --table-name=users  --endpoint-url http://localhost:4566
     "Items": [
         {
             "user_id": {
-                "S": "user2" // messageBodyで指定したuserIdが追加されている
+                "S": "user2"
+            },
+            "user_name": {
+                "S": "Coffee"
             }
         },
         {
             "user_id": {
                 "S": "u1"
+            },
+            "user_name": {
+                "S": "tea"
             }
         }
     ],
@@ -138,7 +154,7 @@ aws dynamodb scan --table-name=users  --endpoint-url http://localhost:4566
 Check
 ```shell
 aws sqs get-queue-attributes \
---queue-url "http://localhost:4566/000000000000/myQueue" \
+--queue-url "http://localhost:4566/000000000000/myQueue.fifo" \
 --attribute-names ApproximateNumberOfMessages \
 --query Attributes.ApproximateNumberOfMessages \
 --endpoint-url http://localhost:4566

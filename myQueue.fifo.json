@@ -1,0 +1,9 @@
+{
+    "QueueName": "myQueue.fifo",
+    "Attributes": {
+        "FifoQueue": "true",
+        "DeduplicationScope": "queue",
+        "FifoThroughputLimit": "perQueue",
+        "ContentBasedDeduplication": "true"
+    }
+}
