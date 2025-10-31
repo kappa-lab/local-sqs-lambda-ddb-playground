@@ -1,3 +1,24 @@
+# 概要
+
+LocalStackを使って、ローカル環境でSQS → Lambda → DynamoDB
+の連携をテストするためのサンプルです。
+
+## 動作フロー
+
+1. SQS (FIFO Queue) にメッセージを送信
+2. Lambda関数 がSQSのメッセージをトリガーとして起動
+3. Lambda がメッセージ内容を DynamoDB の users テーブルに保存
+
+## 主な手順
+
+1. LocalStackをDocker Composeで起動
+2. DynamoDBテーブル作成 (users)
+3. SQS FIFO キュー作成 (myQueue.fifo)
+4. GoプログラムをビルドしてLambda関数としてデプロイ
+5. SQSとLambdaをEvent Source Mappingで連携
+6. SQSにメッセージを送信するとLambdaが実行され、DDBにレコードが追加される
+
+# first
 Run
 ```
 docker-compose up -d

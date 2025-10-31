@@ -14,3 +14,6 @@ queue:
 
 scan:
 	aws dynamodb scan --table-name=users  --endpoint-url http://localhost:4566
+
+docker/up:
+	docker-compose up -d
