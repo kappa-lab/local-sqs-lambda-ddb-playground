@@ -18,12 +18,18 @@ LocalStackを使って、ローカル環境でSQS → Lambda → DynamoDB
 5. SQSとLambdaをEvent Source Mappingで連携
 6. SQSにメッセージを送信するとLambdaが実行され、DDBにレコードが追加される
 
-# first
+# Setup
 Run
 ```
 docker-compose up -d
 ```
 
+AWS Profileが設定されていない場合は、環境変数を設定してください。
+```
+export AWS_ACCESS_KEY_ID=test
+export AWS_SECRET_ACCESS_KEY=test
+export AWS_DEFAULT_REGION=ap-northeast-1
+```
 
 # 1st DDB 
 ## Create Table
@@ -56,6 +62,16 @@ Check
 ```sh
 aws sqs list-queues --endpoint-url http://localhost:4566
 ```
+```json
+{
+    "QueueUrls": [
+        "http://sqs.ap-northeast-1.localhost.localstack.cloud:4566/000000000000/myQueue.fifo"
+    ]
+}
+```
+
+補足: 旧バージョンは以下を返していた。現行バージョンではより本番に近いURLを返すようになった。ただしlocalhostでアクセスできる。
+
 ```json
 {
     "QueueUrls": [
